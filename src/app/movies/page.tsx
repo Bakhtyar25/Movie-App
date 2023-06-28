@@ -37,6 +37,8 @@ const Movies: React.FC<Props> = ({ data, genres }) => {
   if (page == undefined) pageNumber = 1;
   else pageNumber = parseInt(page.toString());
 
+  console.log(data)
+
   return (
     <main className="grow relative min-w-full min-h-full">
       <Head>
@@ -88,7 +90,7 @@ type context = {
 export const getServerSideProps = async (context: context) => {
   let pageNumber: string = "1";
   if (context.query.page != undefined) pageNumber = context.query.page;
-  let apiFetch = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&page=${pageNumber}`;
+  let apiFetch = `https://api.themoviedb.org/3/discover/movie?api_key=ca103c7327d12c7899cde603c27caea4&page=3`;
 
   if (context.query.with_genres !== undefined)
     apiFetch = apiFetch + "&with_genres=" + context.query.with_genres;
@@ -102,11 +104,10 @@ export const getServerSideProps = async (context: context) => {
     apiFetch = apiFetch + "&with_runtime.lte=" + context.query.with_runtime_lte;
   if (context.query.sort_by !== undefined)
     apiFetch = apiFetch + "&sort_by=" + context.query.sort_by;
-  let genresApi = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`;
+  let genresApi = `https://api.themoviedb.org/3/movie/550?api_key=ca103c7327d12c7899cde603c27caea4`;
 
   const movies = await fetch(apiFetch);
   const data = await movies.json();
-
   const genreData = await fetch(genresApi);
   const genres = await genreData.json();
   return { props: { data, genres } };

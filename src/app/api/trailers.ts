@@ -32,7 +32,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data | any>
 ) {
-    const nowPlaying = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}`
+    const nowPlaying = `https://api.themoviedb.org/3/movie/now_playing?api_key=ca103c7327d12c7899cde603c27caea4`
     const videoBaseApi = `https://api.themoviedb.org/3/movie/`
     const dataNowPlaying = await fetch(nowPlaying)
     const moviesPlaying:moviesPlaying = await dataNowPlaying.json()
@@ -40,7 +40,7 @@ export default async function handler(
     let trailers = [] 
     let i=0
     trailers = moviesPlaying.results.map(async(movie:movie) => {
-        let videoApi = videoBaseApi + movie.id.toString() + `/videos?api_key=${apiKey}`
+        let videoApi = videoBaseApi + movie.id.toString() + `/videos?api_key=ca103c7327d12c7899cde603c27caea4`
         let videoFetch = await fetch(videoApi)
         let videoData:videos = await videoFetch.json() 
         let endLoop = false
