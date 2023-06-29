@@ -21,8 +21,8 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data | any>
 ) {
-  const fetchGenres = `https://api.themoviedb.org/3/genre/movie/list?api_key=ca103c7327d12c7899cde603c27caea4`
-  const genreBaseApi = `https://api.themoviedb.org/3/discover/movie?api_key=ca103c7327d12c7899cde603c27caea4&with_genres=`
+  const fetchGenres = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`
+  const genreBaseApi = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=`
   const dataGenres = await fetch(fetchGenres)
   const initGenres = await dataGenres.json()
   
