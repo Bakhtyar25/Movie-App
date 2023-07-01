@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useSearchParams, usePathname } from "next/navigation";
 
 interface props {
   pageNumber: number;
@@ -10,7 +10,6 @@ interface props {
 }
 
 const Pagination: React.FC<props> = ({ pageNumber, genreId, totalPages }) => {
-  const router = useRouter();
   const {
     genre_name,
     with_genres,
@@ -18,9 +17,9 @@ const Pagination: React.FC<props> = ({ pageNumber, genreId, totalPages }) => {
     with_runtime_lte,
     release_date_gte,
     release_date_lte,
-  } = router.query;
-  const { query } = router.query;
-  const path = router.pathname;
+  }: any = useSearchParams();
+  const { query }: any = useSearchParams();
+  const path = usePathname();
 
   let startPage = pageNumber - 2;
   let endPage = pageNumber + 2;

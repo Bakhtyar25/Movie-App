@@ -1,4 +1,4 @@
-import VoteAverage from "./../components/MoviesPage/MoviePage/VoteAverage";
+import VoteAverage from "../components/MoviesPage/MoviePage/VoteAverage";
 import Head from "next/head";
 import Image from "next/image"
 import Link from "next/link";
@@ -105,7 +105,7 @@ type context = {
 
 export const getServerSideProps = async(context:context) =>{
     const apiKey = process.env.API_KEY
-    const data = await fetch(`https://api.themoviedb.org/3/movie/${context.params.id}?api_key=${apiKey}`)
+    const data = await fetch(`https://api.themoviedb.org/3/movie/${context.params.id}?api_key=${process.env.API_KEY}`)
     const movie = await data.json()
     return {props:{movie}}
 } 

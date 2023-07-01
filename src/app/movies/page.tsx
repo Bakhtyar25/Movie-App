@@ -30,14 +30,30 @@ interface movie {
   poster_path: string;
 }
 
-const Movies: React.FC<Props> = ({ data, genres }) => {
-  const router = useRouter();
+async function getMovies(page: string) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY}&page=${page}`
+  );
+  return res.json();
+}
+
+async function getGenres(type: string) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.API_KEY}`
+  );
+  return res.json();
+}
+
+
+export default async function Movies() {
   let page = useSearchParams();
   let pageNumber: number;
   if (page == undefined) pageNumber = 1;
   else pageNumber = parseInt(page.toString());
 
-  console.log(data);
+  const popularMovies = await getMovies(`${page}`);
+  const genres = await getGenres("genre");
+  console.log(genres);
 
   return (
     <main className="grow relative min-w-full min-h-full">
@@ -46,17 +62,17 @@ const Movies: React.FC<Props> = ({ data, genres }) => {
       </Head>
       <h1 className="text-center text-3xl m-10">Movies page</h1>
       <div className="flex flex-col items-center sm:items-start sm:flex-row md:mx-10">
-        {<CriteriaSearch genres={genres} />}
-        {data?.results == undefined && (
+        {/* <CriteriaSearch genres={genres} /> */}
+        {popularMovies.results == undefined && (
           <div className="text-4xl ">
             <p className="text-center">No Results Found...</p>
           </div>
         )}
-        {data?.results && data.results.length > 0 && (
+        {popularMovies.results && popularMovies.results.length > 0 && (
           <div className="w-2/3 m-auto sm:w-3/4 ">
             <div className="my-4">
               <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
-                {data.results.map((movie: movie) => (
+                {popularMovies.results.map((movie: movie) => (
                   <MovieCard key={movie.id} movie={movie} />
                 ))}
               </div>
@@ -64,10 +80,10 @@ const Movies: React.FC<Props> = ({ data, genres }) => {
           </div>
         )}
       </div>
-      {data?.results && data.results.length > 0 && (
+      {popularMovies.results && popularMovies.results.length > 0 && (
         <Pagination
           genreId={undefined}
-          totalPages={data.total_pages}
+          totalPages={popularMovies.total_pages}
           pageNumber={pageNumber}
         />
       )}
@@ -90,7 +106,7 @@ type context = {
 export const getServerSideProps = async (context: context) => {
   let pageNumber: string = "1";
   if (context.query.page != undefined) pageNumber = context.query.page;
-  let apiFetch = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&page=${pageNumber}`;
+  let apiFetch = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.API_KEY}&page=${pageNumber}`;
 
   if (context.query.with_genres !== undefined)
     apiFetch = apiFetch + "&with_genres=" + context.query.with_genres;
@@ -104,7 +120,7 @@ export const getServerSideProps = async (context: context) => {
     apiFetch = apiFetch + "&with_runtime.lte=" + context.query.with_runtime_lte;
   if (context.query.sort_by !== undefined)
     apiFetch = apiFetch + "&sort_by=" + context.query.sort_by;
-  let genresApi = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`;
+  let genresApi = `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.API_KEY}`;
 
   const movies = await fetch(apiFetch);
   const data = await movies.json();
@@ -114,4 +130,4 @@ export const getServerSideProps = async (context: context) => {
   return { props: { data, genres } };
 };
 
-export default Movies;
+
